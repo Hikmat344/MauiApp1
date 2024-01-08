@@ -1,0 +1,44 @@
+﻿@inherits ComponentBase
+@namespace MauiApp1
+
+<div>
+    <h3>Image Processing Component</h3>
+
+    <button @onclick="ProcessImage">Process Image</button>
+
+    @if (processedImage != null)
+    {
+        <img src="@processedImage" alt="Processed Image" />
+    }
+</div>
+
+@code {
+    private string processedImage;
+
+    private async Task ProcessImage()
+    {
+        // Load the original image (replace with your image loading logic)
+        var originalImage = LoadImage("C:/Users/Alarab/Downloads/ocrtest1.jpg");
+
+        // Create an instance of ImageProcessor
+        var imageProcessor = new ImageProcessor();
+
+        // Process the image
+        var  resultImage = imageProcessor.ProcessImage(originalImage);
+
+        // Save or display the processed image (replace with your logic)
+        processedImage = SaveImage( resultImage);
+    }
+
+    private Microsoft.Maui.IImage LoadImage(string imagePath)
+    {
+        // Implement your image loading logic here
+        return null; // Placeholder, actual implementation needed
+    }
+
+    private string SaveImage(Microsoft.Maui.IImage image)
+    {
+        // Implement your image saving logic here
+        return "C:/Users/Alarab/Downloads/processed.jpg"; // Placeholder, actual implementation needed
+    }
+}
