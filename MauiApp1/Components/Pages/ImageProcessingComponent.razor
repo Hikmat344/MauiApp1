@@ -1,8 +1,15 @@
 ﻿@inherits ComponentBase
-@namespace MauiApp1
+@namespace MauiApp1.Components.Pages
+
+@using System
+@using System.IO
+@using Microsoft.Maui.Graphics
+@using SkiaSharp
+@using SkiaSharp.Views.Maui.Controls
 
 <div>
     <h3>Image Processing Component</h3>
+
 
     <button @onclick="ProcessImage">Process Image</button>
 
@@ -17,28 +24,72 @@
 
     private async Task ProcessImage()
     {
-        // Load the original image (replace with your image loading logic)
+        
         var originalImage = LoadImage("C:/Users/Alarab/Downloads/ocrtest1.jpg");
 
-        // Create an instance of ImageProcessor
+        
         var imageProcessor = new ImageProcessor();
 
-        // Process the image
-        var  resultImage = imageProcessor.ProcessImage(originalImage);
+        //to Process the image
+        var resultImage = imageProcessor.ProcessImage(originalImage);
 
-        // Save or display the processed image (replace with your logic)
-        processedImage = SaveImage( resultImage);
+        
+        processedImage = SaveImage(resultImage);
     }
 
     private Microsoft.Maui.IImage LoadImage(string imagePath)
     {
-        // Implement your image loading logic here
-        return null; // Placeholder, actual implementation needed
+        try
+        {
+            
+            using (var stream = File.OpenRead(imagePath))
+            {
+                var bitmap = new Bitmap(stream);
+
+                // Convert the Bitmap to an IImage
+                var image = bitmap.ToImage();
+
+                return image;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions (e.g., file not found, invalid image format, etc.)
+            Console.WriteLine($"Error loading image: {ex.Message}");
+            return null;
+        }
     }
 
     private string SaveImage(Microsoft.Maui.IImage image)
     {
-        // Implement your image saving logic here
-        return "C:/Users/Alarab/Downloads/processed.jpg"; // Placeholder, actual implementation needed
+        
+        if (image is Maui.Graphics.Skia.SkiaImage skiaImage)
+        {
+            // Convert SkiaImage to Bitmap
+            SkiaSharp.Views.Mac.SKBitmap skBitmap = skiaImage.ToBitmap();
+
+            // Get the file path for saving the image
+            string filePath = "C:/Users/Alarab/Downloads/processed.jpg";
+
+            try
+            {
+                // Save the SKBitmap to the specified file path
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    skBitmap.Encode(SkiaSharp.SKEncodedImageFormat.Jpeg, 100).SaveTo(stream);
+                }
+
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine($"Error saving image: {ex.Message}");
+            }
+        }
+
+        
+        return null;
     }
+
 }

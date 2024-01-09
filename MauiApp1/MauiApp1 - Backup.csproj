@@ -73,7 +73,11 @@
         <PackageReference Include="Microsoft.Maui.Graphics.Skia" Version="8.0.3" />
     </ItemGroup>
 
-    <ItemGroup>
+	<ItemGroup>
+		<MauiPage Include="MainPage.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
       <UpToDateCheckInput Remove="Components\Pages\ImageProcessingComponent.razor" />
     </ItemGroup>
 
